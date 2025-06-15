@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simple Grocery Shop</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+    }
+
+    h1 {
+      color: green;
+    }
+
+    .product, .cart-item {
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      margin-top: 5px;
+    }
+
+    #cart {
+      margin-top: 30px;
+      border-top: 2px solid black;
+      padding-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Grocery Shop</h1>
+
+<div id="products">
+  <div class="product">
+    <p><strong>Apples</strong> - ₹50</p>
+    <button onclick="addToCart('Apples', 50)">Add to Cart</button>
+  </div>
+  <div class="product">
+    <p><strong>Bananas</strong> - ₹30</p>
+    <button onclick="addToCart('Bananas', 30)">Add to Cart</button>
+  </div>
+  <div class="product">
+    <p><strong>Milk</strong> - ₹60</p>
+    <button onclick="addToCart('Milk', 60)">Add to Cart</button>
+  </div>
+</div>
+
+<div id="cart">
+  <h2>Your Cart</h2>
+  <div id="cartItems"></div>
+  <p><strong>Total: ₹<span id="total">0</span></strong></p>
+  <button onclick="placeOrder()">Place Order</button>
+</div>
+
+<script>
+  let cart = [];
+
+  function addToCart(name, price) {
+    const item = cart.find(i => i.name === name);
+    if (item) {
+      item.qty++;
+    } else {
+      cart.push({ name, price, qty: 1 });
+    }
+    updateCart();
+  }
+
+  function removeFromCart(name) {
+    cart = cart.filter(item => item.name !== name);
+    updateCart();
+  }
+
+  function updateCart() {
+    const cartItems = document.getElementById('cartItems');
+    const total = document.getElementById('total');
+    cartItems.innerHTML = '';
+    let sum = 0;
+
+    cart.forEach(item => {
+      sum += item.price * item.qty;
+      cartItems.innerHTML += `
+        <div class="cart-item">
+          ${item.name} x ${item.qty} = ₹${item.price * item.qty}
+          <br>
+          <button onclick="removeFromCart('${item.name}')">Remove</button>
+        </div>
+      `;
+    });
+
+    total.textContent = sum;
+  }
+
+  function placeOrder() {
+    if (cart.length === 0) {
+      alert("Cart is empty!");
+      return;
+    }
+    alert("Order placed successfully!");
+    cart = [];
+    updateCart();
+  }
+</script>
+
+</body>
+</html>
